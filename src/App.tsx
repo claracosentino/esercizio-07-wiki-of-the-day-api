@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import './App.css'
-import { getSearchApi } from './repo/search.repo'
+import { getArticleOfTheDay, getSearchApi } from './repo/search.repo'
 
 class App extends Component<object, AppStateType> {
   constructor(props: object) {
@@ -30,7 +30,9 @@ class App extends Component<object, AppStateType> {
 
   getArticleOfTheDay() {
     this.setState({ loading: true }, () => {
-      // call API then update state
+      getArticleOfTheDay().then((articleOfTheDay) => {
+        this.setState({articleOfTheDay: articleOfTheDay, loading: false})
+      })
     })
   }
 
@@ -48,7 +50,7 @@ class App extends Component<object, AppStateType> {
   }
 
   render() {
-    const { query, results, loading } = this.state
+    const { query, results, loading, articleOfTheDay } = this.state
     return <div>
       <h1> Wikipedia Search</h1>
       {/* {articleOfTheDay && <div> ... */}
@@ -59,6 +61,14 @@ class App extends Component<object, AppStateType> {
         value={query}
         disabled={loading} />
       <button onClick={() => this.handleButtonClick()} disabled={loading}>Search</button>
+
+      {/* <pre>{JSON.stringify(this.state, null, 2)}</pre> */}
+
+      <div className="article-of-the-day">
+        <h3>{articleOfTheDay?.title ?? "Nessun titolo disponibile"}</h3>
+        <p>{articleOfTheDay?.extract ?? "Nessuna descrizione disponibile"}</p>
+      </div>
+
       {results.map((el, i) => (<div key={i}>
         <h3>{el.title}</h3>
         <div>{el.snippet.replace(/<[^>]+>/g, '')}</div>

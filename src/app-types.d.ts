@@ -30,7 +30,9 @@ type SearchAPIResponse = {
 };
 
 type ArticleOfTheDayAPIResponse = {
-  tfa: ArticleOfTheDay;
+  mostread : {
+    articles: ArticleOfTheDay[]
+  }
 };
 
 type ArticleOfTheDay = {

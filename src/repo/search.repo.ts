@@ -15,7 +15,11 @@ export const getSearchApi = async (
   }
 };
 
-const WIKI_OF_THE_DAY_URL = "/api/api/rest_v1/feed/featured/2023/10/12";
+const WIKI_OF_THE_DAY_URL = "/api/api/rest_v1/feed/featured/";
+let date = new Date()
+let day = date.getDate()
+let year = date.getFullYear()
+let month = date.getMonth() + 1
 
 // Implementare la funzione getWikiOfTheDayApi che fa una chiamata all'endpoint
 // e carica un articolo del giorno
@@ -23,13 +27,13 @@ const WIKI_OF_THE_DAY_URL = "/api/api/rest_v1/feed/featured/2023/10/12";
 export const getArticleOfTheDay = async (): Promise<ArticleOfTheDay | null> => {
   try {
     // fetch API
-    const res: Request = await fetch("", { method: "GET" }); // INSERT API URL
-    //const json: ArticleOfTheDayAPIResponse = await res.json();
-    //return json.tfa;
+    const res: Response = await fetch(`${WIKI_OF_THE_DAY_URL}${year}/${month}/${day}`, { method: "GET" }); // INSERT API URL
+    const json: ArticleOfTheDayAPIResponse = await res.json();
+    console.log(json)
     return {
-      title: "Article of the day", // MOCK
-      extract: "Lorem ipsum dolor sit amet", // MOCK
-    };
+      title: json.mostread.articles[0].title,
+      extract: json.mostread.articles[0].extract
+    }
   } catch (e) {
     // Not for production
     console.error(e);
