@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import './App.css'
-import { getArticleOfTheDay, getSearchApi } from './repo/search.repo'
+import { getArticleOfTheDay, getSearchApi, getArticleDetail } from './repo/search.repo'
 
 class App extends Component<object, AppStateType> {
   constructor(props: object) {
@@ -36,6 +36,12 @@ class App extends Component<object, AppStateType> {
     })
   }
 
+  handleArticleDetail (pageId: number) {
+    getArticleDetail(pageId).then((articleDetail) => {
+        console.log(articleDetail)
+    })
+  }
+
   handleInputChange(value: string) {
     this.setState({ query: value })
   }
@@ -44,7 +50,7 @@ class App extends Component<object, AppStateType> {
     const { query } = this.state
     this.setState({ loading: true }, () => {
       getSearchApi(query).then((results) => {
-        this.setState({ results: results, loading: false })
+        this.setState({ results: results, loading: false})
       })
     })
   }
@@ -64,14 +70,16 @@ class App extends Component<object, AppStateType> {
 
       {/* <pre>{JSON.stringify(this.state, null, 2)}</pre> */}
 
-      <div className="article-of-the-day">
+      <div className="article-of-the-day" >
         <h3>{articleOfTheDay?.title ?? "Nessun titolo disponibile"}</h3>
         <p>{articleOfTheDay?.extract ?? "Nessuna descrizione disponibile"}</p>
       </div>
 
       {results.map((el, i) => (<div key={i}>
         <h3>{el.title}</h3>
+        <button onClick={() => this.handleArticleDetail(el.pageid)}>cliccami</button>
         <div>{el.snippet.replace(/<[^>]+>/g, '')}</div>
+        <div>{el.pageid}</div>
       </div>))}
     </div>
   }

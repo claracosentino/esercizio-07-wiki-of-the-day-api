@@ -15,25 +15,39 @@ export const getSearchApi = async (
   }
 };
 
-const WIKI_OF_THE_DAY_URL = "/api/api/rest_v1/feed/featured/";
+const WIKI_OF_THE_DAY_URL = "/wikimedia/feed/v1/wikipedia/en/featured/";
 let date = new Date()
 let day = date.getDate()
 let year = date.getFullYear()
 let month = date.getMonth() + 1
-
-// Implementare la funzione getWikiOfTheDayApi che fa una chiamata all'endpoint
-// e carica un articolo del giorno
 
 export const getArticleOfTheDay = async (): Promise<ArticleOfTheDay | null> => {
   try {
     // fetch API
     const res: Response = await fetch(`${WIKI_OF_THE_DAY_URL}${year}/${month}/${day}`, { method: "GET" }); // INSERT API URL
     const json: ArticleOfTheDayAPIResponse = await res.json();
-    console.log(json)
     return {
-      title: json.mostread.articles[0].title,
-      extract: json.mostread.articles[0].extract
+      title: json.tfa.title,
+      extract: json.tfa.extract,
+      pageid: json.tfa.pageid
     }
+  } catch (e) {
+    // Not for production
+    console.error(e);
+    return null;
+  }
+};
+
+
+
+const WIKI_DETAIL_URL = "/api/w/api.php?action=parse&format=json&prop=text&pageid=";
+
+export const getArticleDetail = async (pageId: number): Promise<ArticleDetailText | null> => {
+  try {
+    // fetch API
+    const res: Response = await fetch(`${WIKI_DETAIL_URL}${pageId}`, { method: "GET" }); // INSERT API URL
+    const json: ArticleDetail = await res.json();
+    return json.parse.text["*"]
   } catch (e) {
     // Not for production
     console.error(e);

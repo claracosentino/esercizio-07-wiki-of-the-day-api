@@ -11,6 +11,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
+      "/wikimedia": {
+        target: "https://api.wikimedia.org",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/wikimedia/, "")
+      }
     },
   },
 });

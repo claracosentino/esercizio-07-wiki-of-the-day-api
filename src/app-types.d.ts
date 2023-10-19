@@ -30,12 +30,23 @@ type SearchAPIResponse = {
 };
 
 type ArticleOfTheDayAPIResponse = {
-  mostread : {
-    articles: ArticleOfTheDay[]
-  }
+  tfa: ArticleOfTheDay;
 };
 
 type ArticleOfTheDay = {
   title: string;
   extract: string;
+  pageid: number | null;
 };
+
+type ArticleDetail = {
+  parse: {
+    "title": string,
+    "pageid": number,
+    "text": ArticleDetailText
+  }
+}
+
+type ArticleDetailText = {
+  "*": string
+}
